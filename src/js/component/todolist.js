@@ -4,6 +4,7 @@ export class TodoList extends React.Component {
 	constructor() {
 		super();
 		this.state = {
+			currentInput: "",
 			list: [
 				"CODE CODE CODE!",
 				"Clean The House",
@@ -15,37 +16,30 @@ export class TodoList extends React.Component {
 	}
 
 	render() {
-		const addItem = e => {
-			console.log(e.target.value);
-			let newItem = e.target.value;
-			this.setState({
-				newItem: newItem
-			});
-			/*
-			this.setState({
-				list: this.state.list.concat(newItem)
-				//console.log(this.state.list);
-				//console.log(e.target.value);
-			});
-            */
-		};
-
 		return (
 			<div>
 				<h1> Todo List </h1>
 				<div className="container">
 					<div className="input-group mb-3">
 						<input
-							//onClick={e => addItem(e)}
 							type="text"
 							className="form-control"
-							placeholder="Recipient's username"
-							aria-label="Recipient's username"
+							placeholder="Add to List"
+							aria-label="Add to List"
 							aria-describedby="button-addon2"
+							onChange={e =>
+								this.setState({ currentInput: e.target.value })
+							}
 						/>
 						<div className="input-group-append">
 							<button
-								onClick={e => addItem(e)}
+								onClick={e => {
+									this.setState({
+										list: this.state.list.concat(
+											this.state.currentInput
+										)
+									});
+								}}
 								className="btn btn-outline-secondary"
 								type="button"
 								id="button-addon2">
@@ -57,11 +51,30 @@ export class TodoList extends React.Component {
 						{this.state.list.map((item, index) => {
 							return (
 								<li className="list-group-item" key={index}>
-									{item}
+									<span className="float-left">{item}</span>
+									<button
+										onClick={e => {
+											this.setState({
+												list: this.state.list.filter(
+													todo => todo !== item
+												)
+											});
+										}}
+										className="btn btn-outline-secondary float-right"
+										type="button"
+										id="button-addon2">
+										<i className="fa fa-trash " />
+									</button>
 								</li>
 							);
 						})}
 					</ul>
+				</div>
+
+				<div className="container">
+					<div className="float-left">
+						{"List length:" + this.state.list.length}
+					</div>
 				</div>
 			</div>
 		);
